@@ -1,1 +1,4 @@
 *.pyc
+comment.txt
+.Rhistory
+.RData
