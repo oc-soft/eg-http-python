@@ -34,6 +34,7 @@ Visual Studio codeは、日本の中堅のエンジニアに利用者が多い�
 
 C:\Users\<XXX>\AppData\Local\Programs\Python\Python313
 
+[environment-settings-1](./img/environment-settings-1.png)
 
 
 ## Rの設定
@@ -133,7 +134,7 @@ Serving HTTP on port 8000
 これは、入力プロンプトが表示されていない状態。
 つまり、コマンド入力を受け付けない状態。
 
-これは、httpサーバが起動している状態になっているため。
+httpサーバが起動している状態になっているため。
 
 
 # httpサーバの終了
@@ -204,7 +205,7 @@ mfhttsrv/request/handler.pyの211行目
 # sumの表示
 
 ブラウザのアドレスバーに以下を入力
-http://localhost:8000/comment
+http://localhost:8000/sum
 
 
 数値の総和を計算するページが表示される。
