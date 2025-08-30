@@ -37,15 +37,6 @@ C:\Users\<XXX>\AppData\Local\Programs\Python\Python313
 [environment-settings-1](./img/environment-settings-1.png)
 
 
-## Rの設定
-
-以下のような文字列を追加する。<XXX>は、インストールしているRのバージョン。
-
-C:\Program Files\R\R-<XXX>\bin
-
-[R-location](./img/R-location.png)
-
-
 # ターミナルのcmd.exeを実行 
 
 [スタートメニュー]をクリックして、上部の検索バーに"ターミナル"を入力。
@@ -60,7 +51,7 @@ C:\Users\XXXX>
 
 ```
 
-# cmd.exeでpythonとRが実行できるか確認
+# cmd.exeでpythonが実行できるか確認
 
 以下のコマンドを実行
 
@@ -77,47 +68,25 @@ C:\Users\XXX> python --version
 Python 3.13.5
 ```
 
-## Rが実行できるかの確認
-
-```
-C:\Users\XXX> R --version
-
-```
-
-以下のような文字列が出力される。
-
-```
-R version 4.5.1 (2025-06-13 ucrt) -- "Great Square Root"
-Copyright (C) 2025 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under the terms of the
-GNU General Public License versions 2 or 3.
-For more information about these matters see
-https://www.gnu.org/licenses/.
-
-```
-
 # pythonによるhttpサーバの実行
 
 プログラムを作成して運用まで実施することをProjectと呼ぶことが多い。
-作業用のフォルダ(Projects)を作成してそのフォルダ内で、eg-http-python-Rフォルダを作成して、そこにプログラムファイル、参考資料をおいて、プログラムを完成させる。
+作業用のフォルダ(Projects)を作成してそのフォルダ内で、eg-http-pythonフォルダを作成して、そこにプログラムファイル、参考資料をおいて、プログラムを完成させる。
 
 以下のようなフォルダ構成にして、作業を進める。
 
-C:\Users\XXX\Projects\eg-http-python-R
+C:\Users\XXX\Projects\eg-http-python
 
 
 cmd.exeを実行して
-eg-http-python-Rを作業ディレクトリにする。
+eg-http-pythonを作業ディレクトリにする。
 
 ```
 C:\Users\XXX> cd Projects
 
-C:\Users\XXX\Projects> cd eg-http-python-R
+C:\Users\XXX\Projects> cd eg-http-python
 
-C:\Users\XXX\Projects\eg-http-python-R>
+C:\Users\XXX\Projects\eg-http-python>
 
 ```
 
@@ -126,11 +95,11 @@ C:\Users\XXX\Projects\eg-http-python-R>
 cmd.exeで以下のコマンドを実行
 
 ```
-C:\Users\XXX\Projects\eg-http-python-R> svr.bat
+C:\Users\XXX\Projects\eg-http-python> svr.bat
 Serving HTTP on port 8000 
 
 ```
-上記のような出力がでて、"C:\Users\XXX\Projects\eg-http-python-R>"が最後に出力されない状態になる。
+上記のような出力がでて、"C:\Users\XXX\Projects\eg-http-python>"が最後に出力されない状態になる。
 これは、入力プロンプトが表示されていない状態。
 つまり、コマンド入力を受け付けない状態。
 
@@ -141,7 +110,7 @@ httpサーバが起動している状態になっているため。
 入力コマンドを受け付ける状態にするには、httpサーバを終了する必要がある。
 httpサーバを終了するには、カーソルが点滅している状態で、[Ctrl]キーと[C]キーを同時に押す。
 ```
-C:\Users\XXX\Projects\eg-http-python-R> svr.bat 
+C:\Users\XXX\Projects\eg-http-python> svr.bat 
 Serving HTTP on port 8000 
 |
 ^
@@ -181,81 +150,42 @@ pythonライブラリのSimpleHTTPRequestHandlerに詳細がある。
 Handlerクラスは、SimpleHTTPRequestHandlerを継承している。
 
 
-# commentの表示
+
+# custom-msgの表示
+
+この処理は、mfhttsrv/request/handler.pyの55行目で実施される。
+現在の日時を最初に取得して、その日時を含むhtmlの文字列作成する。
+作成した文字列をwriteで書き出している。writeで書き出している。
+__main__.pyで作成したhttpのサーバがwriteで書き出されたデータをブラウザに返却する。
+
+
+# todoの表示
 
 
 ブラウザのアドレスバーに以下を入力
-http://localhost:8000/comment
+http://localhost:8000/todo
 
 
-コメントを書き込むページが表示される。
-新しいコメント欄に文字を入力して、送信すると、コメントが記録される。
-再度コメントのページを開くと、以前のコメントが表示される。
+todoを追加できるページが表示される。
+新規アイテムに文字を入力して、送信すると、TODOリストが記録される。
 
 この処理は以下の個所で実施される。
 
 最初にページを開いた時
 
-mfhttsrv/request/handler.pyの193行目
+mfhttsrv/request/handler.pyの192行目
 
 送信ボタンを押下した時
-mfhttsrv/request/handler.pyの211行目
+mfhttsrv/request/handler.pyの196行目
 
+実際のページ生成処理
+mfhttsrv/request/handler.pyの106行目
 
-# sumの表示
-
-ブラウザのアドレスバーに以下を入力
-http://localhost:8000/sum
-
-
-数値の総和を計算するページが表示される。
-数値データに数字を入力して、送信すると、総和が計算される。
-総和計算はR言語によって実行される。
-
-この処理は以下の個所で実施される。
-
-最初にページを開いた時
-
-mfhttsrv/request/handler.pyの202行目
-
-送信ボタンを押下した時
-mfhttsrv/request/handler.pyの244行目
-
-PythonからR言語処理呼び出し
-mfhttsrv/request/handler.pyの310行目
-
-R言語の総和計算
-sum.R
-
-
-# R言語単体の総和計算
-
-cmd.exeで以下のコマンドを実行
-
-```
-C:\Users\XXX\Projects\eg-http-python-R> Rscript sum.R
-
-```
-上記の状態で入力待ちになる
-
-図示のように 1 3 4を入力しする
-```
-C:\Users\XXX\Projects\eg-http-python-R> Rscript sum.R
-1 3 4
-
-```
-入力後、[Ctrl] + [Z]を押下のち[Enter]キーを押下で1 3 4の総和が出力される。
-
-```
-C:\Users\XXX\Projects\eg-http-python-R> Rscript sum.R
-1 3 4
-^Z
-Read 3 items
-Read 1 item
-Read 1 item
-Read 1 item
-8
-```
+todoリストのデータは、todo.txtというファイルで管理されている。
+読み込み処理
+mfhttsrv/request/handler.pyの172行目
+追加処理:
+mfhttsrv/request/handler.pyの140行目
 
 
 # httpサーバでpythonプログラムをデバッグ
