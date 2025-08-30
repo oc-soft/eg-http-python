@@ -1,10 +1,42 @@
 <!doctype html>
 <html>
   <head>
+
+    <meta name="viewport" content="width-device-width; initial-scale=1.0">
     <meta charset="utf-8">
     <title>My first http page</title>
+    <style>
+      p:first-of-type {
+        top: 30%;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        font-family: sans-serif;
+        font-size: 32px;
+        color: #0f0f0f;
+        transition: opacity 3s;
+        @starting-style {
+          opacity: 0;
+        }
+      }
+      div:first-of-type {
+        position: relative;
+        height: 100vh;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        div:first-of-type {
+          background: #0f0f0f;
+        }
+        p:first-of-type {
+          color: #cccccc;
+        }
+      }
+    </style>
   </head>
   <body>
-    <p>今日は世界!</p>
+    <div>
+      <p>こんにちは世界</p>
+    </div>
   </body>
 </html>
