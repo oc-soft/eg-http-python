@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <title>カスタムメッセージ</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      body {
+        height: 100vh;
+        position: relative;
+        font-family: sans-serif;
+        color: #0f0f0f;
+      }
+      div.display {
+        height: 70%;
+        width: 100%;
+      }
+      div.spec {
+        width: 100%;
+        height: 30%;
+        border-top: solid 2px;
+      }
+      main:first-of-type {
+        position: absolute;
+        top: 20%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      main table {
+        transition: opacity 3s;
+        @starting-style {
+          opacity: 0;
+        }
+      } 
+      [role="tooltip"] {
+        display: none;
+      }
+      [role="tooltip"].show {
+        display: block;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #0f0f0f;
+        }
+        body {
+          color: #cccccc;
+        }
+      }
+      @media (orientation: landscape) {
+        body {
+          position: static;
+        }
+        div.display {
+          float: left;
+          width: 70%;
+          height: 100%;
+        }
+        div.spec {
+          box-sizing: border-box;
+          float: right;
+          width: 30%;
+          height: 100%;
+          border-top: none;
+          border-left: solid 2px;
+        }
+        main:first-of-type {
+          position: relative;
+          top: 20%;
+          width: auto;
+        }
+      }
+    </style>
+    <script>
+      (() => {
+        function setVisibleTooltip(elem, visible) {
+          if (visible) {
+            if (!isVisibleTooltip(elem)) {
+              elem.classList.add('show')
+            }
+          } else {
+            elem.classList.remove('show')
+          }
+        }
+
+        function isVisibleTooltip(elem) {
+          return elem.classList.contains('show')
+        }
+        function findTooltipElement(srcElem) {
+          const elemId = srcElem.getAttribute('aria-describedby')
+          let res = undefined
+          if (elemId) {
+            res = document.getElementById(elemId)
+          }
+          return res
+        }
+        function handleShowTooltip(event) {
+          if ('mouseenter' == event.type) {
+            setVisibleTooltip(findTooltipElement(event.currentTarget), true)
+          } else if ('mouseout' == event.type) {
+            setVisibleTooltip(findTooltipElement(event.currentTarget), false)
+          } else if ('click' == event.type) {
+            const tooltipElem = findTooltipElement(event.currentTarget)
+            if (tooltipElem) {
+              setVisibleTooltip(tooltipElem, !isVisibleTooltip(tooltipElem))
+            }
+          }
+
+        }
+
+        function handleLoad(event) {
+          const elems = document.querySelectorAll('[aria-describedby]')
+          elems.forEach((elem) => {
+            elem.addEventListener('mouseenter', handleShowTooltip)
+            elem.addEventListener('mouseout', handleShowTooltip)
+            elem.addEventListener('click', handleShowTooltip)
+          })
+        }
+        window.addEventListener('load', handleLoad) 
+      })()
+    </script>
+  </head>
+  <body>
+    <div class="display">
+      <main>
+        <table>
+          <tr aria-describedby="server-response">
+            <td>サーバ日時</td>
+            <td class="serverdate">2025-09-23 12:32:23 JST</td>
+          </tr>
+          <tr aria-describedby="client-request">
+            <td class="requestdate">リクエスト日時</td>
+            <td >2025-09-23 12:32:23 JST</td>
+          </tr>
+        </table>
+      <main>
+    </div>
+    <div class="spec">
+      <div>仕様説明</div>
+      <p>要素をクリックまたはマウスを乗せると以下に仕様を表示されます。ダークモードに設定するとダークモードで仕様を確認できます。</p>
+      <p role="tooltip" id="server-response">サーバからの応答時刻を表示します。csutom-msg?servertimeの場合は<code>2025-09-23 12:32:23 JST</code>の部分が更新されます。</p>
+      <p role="tooltip" id="client-request">ブラウザが、サーバに対してリクエスト送信した時刻を表示します。</p>
+    </div>
+  </body>
+<!-- vi: se ts=2 sw=2 et: -->
+</html>
