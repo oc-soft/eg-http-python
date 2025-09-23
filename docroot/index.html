@@ -2,7 +2,7 @@
 <html>
   <head>
 
-    <meta name="viewport" content="width-device-width; initial-scale=1.0">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
     <meta charset="utf-8">
     <title>My first http page</title>
     <style>
@@ -19,9 +19,12 @@
           opacity: 0;
         }
       }
-      div:first-of-type {
+      body {
         position: relative;
         height: 100vh;
+      }
+      div:first-of-type {
+        height: 100%;
       }
       
       @media (prefers-color-scheme: dark) {
