@@ -27,7 +27,7 @@
       <h1>1.要件</h1>
       <ol>
         <li>サーバのアクセス日時時を表示する</li>
-        <li>時刻はタイムゾーンを含める</li>
+        <li>日時にはタイムゾーンを含める</li>
         <li>10秒毎にサーバ日時を更新する</li>
         <li>スマートフォンの表示にも対応する</li>
         <li>ブラウザのダークモードテーマに対応する</li>
@@ -37,11 +37,11 @@
     <section>
       <h1>2.設計</h1>
       <ol>
-        <li>時刻の文字列表現形式</li>
+        <li>日時の文字列表現形式</li>
         <li>リクエスト、レスポンスの形式</li>
-        <li>custom-msg応答表示</li>
+        <li>custom-msgのレスポンス表示</li>
       </ol>
-      <h2>2.1.時刻の文字列表現形式</h2>
+      <h2>2.1.日時の文字列表現形式</h2>
         <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
         </p>
         <p>例:<samp>2025-09-23 12:13:45 JST</samp></p>
@@ -56,9 +56,9 @@
           <p>HTTP GETメソッドリクエストについて、<span>text/html</span>形式のレスポンスする。</p>
         <h3>2.2.2.その後のリクエスト、レスポンス</h3>
         <p>ブラウザ上では、カスタムメッセージが表示されている。表示されている情報のうち、サーバアクセス日時のみが10秒毎に更新される。サーバアクセス日時のみのリクエスト、レスポンスを処理する。リクエストに対して、サーバ日時を<span>text/plain</span>レスポンスをおこなう。</p>
-        <h4>2.2.2.1.サーバアクセス日時のみリクエスト</h4>
+        <h4>2.2.2.1.サーバアクセス日時のみリクエスト、レスポンス</h4>
         <p>ブラウザのjavascript、タイマを使用して、10秒毎のリクエストを行う。受信したレスポンスの文字列で、ページのサーバアクセス日時をを置き換える。</p>
-        <h2>2.2.3.custom-msg応答表示</h2> 
+        <h2>2.2.3.custom-msgレスポンス表示</h2> 
         <p>最初のレスポンスにおいては以下を含める
           <ol>
             <li><code>viewpot</code>を考慮した<code>meta</code>要素</li>
@@ -76,17 +76,16 @@
         <li>http://xxxx/custom-msg?severtime</li>
       </ol>
       <h2>3.1.http://xxxx/custom-msg</h2>
-      <p><code>http://xxxx/custom-msg</code>は、最初のリクエスト、レスポンスに対応する。レスポンスは図示のような出力となる。</p>
+      <p><code>http://xxxx/custom-msg</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
       <iframe
         src="./custom-msg.html"
         height="400"
         width="600">
       </iframe>
       <h2>3.2.http://xxxx/custom-msg?servertime</h2>
-        <p><code>http://xxxx/custom-msg</code>は、最初のリクエスト、レスポンスに対応する。レスポンスの本文は以下のような文字列になる。</p>
+        <p><code>http://xxxx/custom-msg?servertime</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。</p>
       <code>2025-09-23 12:13:45 JST</code>
     </section>
-
   </body>
 <!-- vi: se ts=2 sw=2 et: -->
 </html>
