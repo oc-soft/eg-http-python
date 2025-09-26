@@ -54,16 +54,61 @@ class Handler(server.SimpleHTTPRequestHandler):
  
     def handle_custom_message(self):
         """ カスタムメッセージ処理 """
-        date_time = datetime.datetime.now().strftime('%Y-%m-%d %X') 
+        # タイムゾーンが付与されたdatetimeオブジェクトを取得
+        cur_datetime = datetime.datetime.now().astimezone()
+        date_time = cur_datetime.strftime('%Y-%m-%d %H:%M:%S %Z') 
         content_str = f"""
 <!doctype html>
 <html>
     <head>
+        <!-- スマートフォン対応 -->
+        <meta name="viewport" content="width=device-width; initial-scale=1.0">
         <meta charset="utf-8">
         <title>カスタムメッセージ</title>
+        <style>
+            body {{
+                /* bodyの高さを表示高さと一致させる*/ 
+                height: calc(100vh - 2 * 8px);
+                /* 日本語でいうゴシック的なフォントを使用 */
+                font-family: sans-serif;
+                /* 完全な黒ではなく非常に濃いグレーを表示に使用 */
+                color: #0f0f0f;
+                margin: 8px;
+            }}
+            main:first-of-type {{
+                /* 縦方向の位置調整をしたい */
+                position: absolute; 
+                /* 日時を表示する位置を画面中央やや上にする */
+                top: 20%;
+                /* 幅は包含する要素幅と同じとする */
+                left: 0;
+                right: 0;
+                /* 日時表示テーブル横方向を中央にしたい */
+                display: flex;
+                justify-content: center;
+            }}
+            main table {{
+                /* 3秒で徐々に文字が表示されるように設定 */
+                transition: opacity 3s; 
+                @starting-style {{
+                   opacity: 0; 
+                }}
+            }}
+        </style>
     </head>
     <body>
-        <p>今は{date_time}です。</p>
+        <main>
+            <table>
+                <tr aria-describedby="server-response">
+                    <td>サーバ日時</td>
+                    <td class="serverdate">{date_time}</td>
+                </tr>
+                <tr aria-describedby="client-request">
+                    <td class="requestdate">リクエスト日時</td>
+                    <td >2025-09-23 12:32:23 JST</td>
+                </tr>
+            </table>
+        </main>
     </body>
 </html>
         """
