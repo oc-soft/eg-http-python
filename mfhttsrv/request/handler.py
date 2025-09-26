@@ -101,11 +101,11 @@ class Handler(server.SimpleHTTPRequestHandler):
             <table>
                 <tr aria-describedby="server-response">
                     <td>サーバ日時</td>
-                    <td class="serverdate">{date_time}</td>
+                    <td class="server-time">{date_time}</td>
                 </tr>
                 <tr aria-describedby="client-request">
-                    <td class="requestdate">リクエスト日時</td>
-                    <td >2025-09-23 12:32:23 JST</td>
+                    <td>リクエスト日時</td>
+                    <td class="request-time">2025-09-23 12:32:23 JST</td>
                 </tr>
             </table>
         </main>
