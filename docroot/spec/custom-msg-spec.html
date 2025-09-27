@@ -42,9 +42,13 @@
         <li>custom-msgのレスポンス表示</li>
       </ol>
       <h2>2.1.日時の文字列表現形式</h2>
-        <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
+        <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S.%f %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
         </p>
-        <p>例:<samp>2025-09-23 12:13:45 JST</samp></p>
+        <table>
+          <caption>例</caption>
+          <tr><td><samp>2025-09-23 12:13:45.803215 東京 (標準)</samp></td><td>Windows環境</td></tr>
+          <tr><td><samp>2025-09-23 12:13:45.803215 JST</samp></td><td>Linux環境</td></tr>
+        </table>
       <h2>2.2.リクエスト、レスポンスの形式</h2>
         <p>10秒毎の更新を考慮して、以下のリクエスト、レスポンスに対応する。
           <ol>
@@ -82,9 +86,24 @@
         height="400"
         width="600">
       </iframe>
-      <h2>3.2.http://xxxx/custom-msg?servertime</h2>
-        <p><code>http://xxxx/custom-msg?servertime</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。</p>
-      <code>2025-09-23 12:13:45 JST</code>
+      <h2>3.2.http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
+        <p>Windows環境</p>
+        <pre>
+{
+  "server-time": "2025-09-23 12:13:45.803215 東京 (標準時)",
+  "request-time": "2025-09-23 12:13:44.739000 東京 (標準時)"
+}
+        </pre>
+        <p>linux環境</p>
+        <pre>
+{
+  "server-time": "2025-09-23 12:13:45.803215  JST",
+  "request-time": "2025-09-23 12:13:44.739000  JST"
+}
+        </pre>
+      <h2>3.3.request-time=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
+      <p>request-timeが含まれないまたは不正な値の場合は、サーバがリクエストを受理した日時とする。</p>
     </section>
   </body>
 <!-- vi: se ts=2 sw=2 et: -->
