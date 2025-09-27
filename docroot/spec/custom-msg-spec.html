@@ -47,16 +47,21 @@
       <h2>2.1.日時の文字列表現形式</h2>
         <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
         </p>
+
         <table>
           <caption>例</caption>
           <tr><td><samp>2025-09-23 12:13:45 東京 (標準)</samp></td><td>Windows環境</td></tr>
           <tr><td><samp>2025-09-23 12:13:45 JST</samp></td><td>Linux環境</td></tr>
         </table>
+        <h3>特記事項</h3>  
+          <p>以降、処理においては、URLのリクエストパラメータはURLエスケープを使用する。文書では、内容が理解しやすいように、URLエスケープを用いていない。</p>
+          <p><samp>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</samp>は、リクエストパラメータつきURLである。実際のリクエストでは、<samp>http://localhost:8000/custom-msg?request-time=2025-08-31T12%3A23%3A16.278%2B09%3A00</samp>のようなリクエストになる。URLエスケープをしない場合は、<samp>http://localhost:8000/custom-msg?request-time=2025-08-31T12:23:16.278+09:00</samp>という表記となる。本文書では、後者の表記を用いて説明している。</p>  
+
       <h2>2.2.リクエスト、レスポンスの形式</h2>
         <p>10秒毎の更新を考慮して、以下のリクエスト、レスポンスに対応する。
           <ol>
-            <li>最初のリクエスト(http://xxxx/custom-msg?requesttime)、レスポンス</li>
-            <li>その後のリクエスト(http://xxx/custom-msg?severtime&amp;requesttime=YYYY-MM-DDTHH:mm:ss.sssZ)、レスポンス</li>
+            <li>最初のリクエスト(http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ)、レスポンス</li>
+            <li>その後のリクエスト(http://xxx/sever-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ)、レスポンス</li>
           </ol>
         </p>
         <h3>2.2.1.最初のリクエスト、レスポンス</h3> 
@@ -79,35 +84,35 @@
       <h1>3.入出力仕様</h1>
       <p>以下のリクエスト、レスポンスの仕様を記載する</p> 
       <ol>
-        <li>http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</code></li>
-        <li>http://xxxx/custom-msg?severtime&amp;reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</li>
+        <li>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code></li>
+        <li>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</li>
       </ol>
-      <p>上記リクエストにおいて、requesttime=YYYY-MM-DDTHH:mm:ss.sssZの部分は指定しなくてもよい。</p> 
-      <h2>3.1.http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
-      <p><code>http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
+      <p>上記リクエストにおいて、request-time=YYYY-MM-DDTHH:mm:ss.sssZの部分は指定しなくてもよい。</p> 
+      <h2>3.1.http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
       <iframe
         src="./custom-msg.html"
         height="600"
         width="600">
       </iframe>
-      <h2>3.2.http://xxxx/custom-msg?servertime&amp;reqesttime=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
-      <p><code>http://xxxx/custom-msg?servertime&amp;reqesttime=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
+      <h2>3.2.http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
         <p>Windows環境</p>
         <pre>
 {
-  "servertime": "2025-09-23 12:13:45 東京 (標準時)",
-  "requesttime": "2025-09-23 12:13:44 東京 (標準時)"
+  "server-time": "2025-09-23 12:13:45 東京 (標準時)",
+  "request-time": "2025-09-23 12:13:44 東京 (標準時)"
 }
         </pre>
         <p>linux環境</p>
         <pre>
 {
-  "servertime": "2025-09-23 12:13:45 JST",
-  "requesttime": "2025-09-23 12:13:44 JST"
+  "server-time": "2025-09-23 12:13:45 JST",
+  "request-time": "2025-09-23 12:13:44 JST"
 }
         </pre>
-      <h2>3.3.reqesttime=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
-      <p>requesttimeが含まれないまたは不正な値の場合は、サーバがリクエストを受理した日時とする。</p>
+      <h2>3.3.request-time=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
+      <p>request-timeが含まれないまたは不正な値の場合は、サーバがリクエストを受理した日時とする。</p>
     </section>
   </body>
 <!-- vi: se ts=2 sw=2 et: -->
