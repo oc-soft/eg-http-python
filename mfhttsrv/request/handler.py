@@ -136,6 +136,17 @@ class Handler(server.SimpleHTTPRequestHandler):
                    opacity: 0; 
                 }}
             }}
+            /* ダークモード */
+            @media (prefers-color-scheme: dark) {{
+                html {{
+                    /* 完全な黒ではなく非常に濃いグレーを表示に使用 */
+                    background: #0f0f0f;
+                }}
+                body {{
+                    /* 完全な白ではなく非常に薄いグレーを表示に使用 */
+                    color: #cccccc;
+                }}
+          }}
         </style>
     </head>
     <body>
