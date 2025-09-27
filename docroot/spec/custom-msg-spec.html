@@ -45,18 +45,14 @@
         <li>custom-msgのレスポンス表示</li>
       </ol>
       <h2>2.1.日時の文字列表現形式</h2>
-        <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
+        <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S.%f %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
         </p>
 
         <table>
           <caption>例</caption>
-          <tr><td><samp>2025-09-23 12:13:45 東京 (標準)</samp></td><td>Windows環境</td></tr>
-          <tr><td><samp>2025-09-23 12:13:45 JST</samp></td><td>Linux環境</td></tr>
+          <tr><td><samp>2025-09-23 12:13:45.803215 東京 (標準)</samp></td><td>Windows環境</td></tr>
+          <tr><td><samp>2025-09-23 12:13:45.803215 JST</samp></td><td>Linux環境</td></tr>
         </table>
-        <h3>特記事項</h3>  
-          <p>以降、処理においては、URLのリクエストパラメータはURLエスケープを使用する。文書では、内容が理解しやすいように、URLエスケープを用いていない。</p>
-          <p><samp>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</samp>は、リクエストパラメータつきURLである。実際のリクエストでは、<samp>http://localhost:8000/custom-msg?request-time=2025-08-31T12%3A23%3A16.278%2B09%3A00</samp>のようなリクエストになる。URLエスケープをしない場合は、<samp>http://localhost:8000/custom-msg?request-time=2025-08-31T12:23:16.278+09:00</samp>という表記となる。本文書では、後者の表記を用いて説明している。</p>  
-
       <h2>2.2.リクエスト、レスポンスの形式</h2>
         <p>10秒毎の更新を考慮して、以下のリクエスト、レスポンスに対応する。
           <ol>
@@ -100,15 +96,15 @@
         <p>Windows環境</p>
         <pre>
 {
-  "server-time": "2025-09-23 12:13:45 東京 (標準時)",
-  "request-time": "2025-09-23 12:13:44 東京 (標準時)"
+  "server-time": "2025-09-23 12:13:45.803215 東京 (標準時)",
+  "request-time": "2025-09-23 12:13:44.739000 東京 (標準時)"
 }
         </pre>
         <p>linux環境</p>
         <pre>
 {
-  "server-time": "2025-09-23 12:13:45 JST",
-  "request-time": "2025-09-23 12:13:44 JST"
+  "server-time": "2025-09-23 12:13:45.803215  JST",
+  "request-time": "2025-09-23 12:13:44.739000  JST"
 }
         </pre>
       <h2>3.3.request-time=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
