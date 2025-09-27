@@ -17,7 +17,7 @@ class Handler(server.SimpleHTTPRequestHandler):
     @property
     def datetime_fmt(self):
         """ 仕様の日時フォーマット """
-        return '%Y-%m-%d %H:%M:%S %Z'
+        return '%Y-%m-%d %H:%M:%S.%f %Z'
 
     def __init__(self, *args, **kwargs):
         """ Handlerの初期化 """
@@ -148,6 +148,92 @@ class Handler(server.SimpleHTTPRequestHandler):
                 }}
           }}
         </style>
+        <script>
+            /**
+             * サーバ日時を取得
+             * @return json形式のサーバ日時、リクエスト日時
+             */
+            async function getServerTime() {{
+                // リクエスト日時 
+                const currentTime = new Date().toISOString() 
+                let requestUrl = `/server-time?request-time=${{currentTime}}`
+                // リクエストURLを生成(URLで有効な文字だけにエスケープ)
+                requestUrl = encodeURI(requestUrl)
+                let result = undefined
+                try {{
+                    // リクエストを送信し、結果を受信
+                    const res = await window.fetch(requestUrl)
+                    if (res.ok) {{
+                        // 受信がOK
+                            // 受信結果からjson形式のオブジェクトを取得
+                            result = res.json() 
+                    }}
+                }} catch (error) {{
+                    // 送受信のエラーが発生した場合の制御
+                    // 特に何も処理を実施しない
+                }}
+                return result
+            }}
+            /**
+             * HTML要素を更新
+             *
+             */
+            function updateElement(elem, datetime) {{
+               elem.textContent = datetime 
+            }}
+            /**
+             * サーバ日時を表示しているHTML要素を取得
+             * @return サーバ日時を表示しているHTML要素
+             */
+            function getServerTimeElement() {{
+                return document.getElementsByClassName('server-time')[0]
+            }}
+            /**
+             * リクエスト日時を表示しているHTML要素を取得
+             * @return リクエスト日時を表示しているHTML要素
+             */
+            function getRequestTimeElement() {{
+                return document.getElementsByClassName('request-time')[0]
+            }}
+
+            /**
+             * サーバ日時、リクエスト日時を更新
+             */
+            async function updateServerTime() {{
+                // サーバ日時を取得
+                const resp = await getServerTime()
+                if (resp) {{
+                    // 取得に成功
+                    if (resp['server-time'] && resp['request-time']) {{
+                        // 受信したjsonオブジェクトにserver-time、request-time
+                        // の要素がある場合にHTML要素を更新する
+                        updateElement(getServerTimeElement(),
+                            resp['server-time'])
+                        updateElement(getRequestTimeElement(),
+                            resp['request-time'])
+
+                    }}
+                }}
+            }}
+            /**
+             * サーバ日時を更新し続ける
+             */
+            async function updateServerTimeForever() {{
+                // サーバ日時を更新
+                await updateServerTime() 
+                // 更新が完了したら、10秒後にこの処理が呼ばれるように設定
+                setTimeout(updateServerTimeForever, 1000 * 10)
+            }}
+            /**
+             * HTMLページの読み込みが完了した時の処理
+             */
+            function handleLoad() {{
+                // 10秒後からサーバ日時を更新し続ける
+                setTimeout(updateServerTimeForever, 1000 * 10)
+            }}
+            // HTMLページ読み込みが完了した時に処理が呼ばれるように設定
+            window.addEventListener('load', handleLoad)
+        </script>
     </head>
     <body>
         <main>
@@ -158,7 +244,7 @@ class Handler(server.SimpleHTTPRequestHandler):
                 </tr>
                 <tr aria-describedby="client-request">
                     <td>リクエスト日時</td>
-                    <td class="request-time">2025-09-23 12:32:23 JST</td>
+                    <td class="request-time">{req_time}</td>
                 </tr>
             </table>
         </main>
