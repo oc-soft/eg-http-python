@@ -9,6 +9,9 @@
         font-family: sans-serif;
         color: #0f0f0f;
       }
+      table caption {
+        text-align: left;
+      }
       h1, h2, h3, h4, h5 {
         font-size: 1em;
       }
@@ -27,7 +30,7 @@
       <h1>1.要件</h1>
       <ol>
         <li>サーバのアクセス日時時を表示する</li>
-        <li>時刻はタイムゾーンを含める</li>
+        <li>日時はUTC表現とし、タイムゾーンオフセットを含める</li>
         <li>10秒毎にサーバ日時を更新する</li>
         <li>スマートフォンの表示にも対応する</li>
         <li>ブラウザのダークモードテーマに対応する</li>
@@ -37,27 +40,31 @@
     <section>
       <h1>2.設計</h1>
       <ol>
-        <li>時刻の文字列表現形式</li>
+        <li>日時の文字列表現形式</li>
         <li>リクエスト、レスポンスの形式</li>
-        <li>custom-msg応答表示</li>
+        <li>custom-msgのレスポンス表示</li>
       </ol>
-      <h2>2.1.時刻の文字列表現形式</h2>
+      <h2>2.1.日時の文字列表現形式</h2>
         <p>pythonのdatetimeのフォーマットで<code>%Y-%m-%d %H:%M:%S %Z</code>の表現とする。各記号は<a href="https://docs.python.org/3/library/datetime.html#format.codes" >リンク</a>を参照のこと。
         </p>
-        <p>例:<samp>2025-09-23 12:13:45 JST</samp></p>
+        <table>
+          <caption>例</caption>
+          <tr><td><samp>2025-09-23 12:13:45 東京 (標準)</samp></td><td>Windows環境</td></tr>
+          <tr><td><samp>2025-09-23 12:13:45 JST</samp></td><td>Linux環境</td></tr>
+        </table>
       <h2>2.2.リクエスト、レスポンスの形式</h2>
         <p>10秒毎の更新を考慮して、以下のリクエスト、レスポンスに対応する。
           <ol>
-            <li>最初のリクエスト(http://xxxx/custom-msg)、レスポンス</li>
-            <li>その後のリクエスト(http://xxx/custom-msg?severtime)、レスポンス</li>
+            <li>最初のリクエスト(http://xxxx/custom-msg?requesttime)、レスポンス</li>
+            <li>その後のリクエスト(http://xxx/custom-msg?severtime&amp;requesttime=YYYY-MM-DDTHH:mm:ss.sssZ)、レスポンス</li>
           </ol>
         </p>
         <h3>2.2.1.最初のリクエスト、レスポンス</h3> 
           <p>HTTP GETメソッドリクエストについて、<span>text/html</span>形式のレスポンスする。</p>
         <h3>2.2.2.その後のリクエスト、レスポンス</h3>
-        <p>ブラウザ上では、カスタムメッセージが表示されている。表示されている情報のうち、サーバアクセス日時のみが10秒毎に更新される。サーバアクセス日時のみのリクエスト、レスポンスを処理する。リクエストに対して、サーバ日時を<span>text/plain</span>レスポンスをおこなう。</p>
-        <h4>2.2.2.1.サーバアクセス日時のみリクエスト</h4>
-        <p>ブラウザのjavascript、タイマを使用して、10秒毎のリクエストを行う。受信したレスポンスの文字列で、ページのサーバアクセス日時をを置き換える。</p>
+        <p>ブラウザ上では、カスタムメッセージが表示されている。表示されている情報のうち、サーバアクセス日時、リクエスト日時が10秒毎に更新される。サーバアクセス日時、リクエスト日時のリクエスト、レスポンスを処理する。リクエストに対して、サーバ日時、リクエスト日時を<span>application/json</span>レスポンスとして処理する。リクエスト形式はHTTP GETとする。</p>
+        <h4>2.2.2.1.サーバアクセス日時のみリクエスト、レスポンス</h4>
+        <p>ブラウザのjavascript、タイマを使用して、10秒毎のリクエストを行う。受信したレスポンスのjsonオブジェクトから、ページのサーバアクセス日時、リクエスト日時を置き換える。</p>
         <h2>2.2.3.custom-msg応答表示</h2> 
         <p>最初のレスポンスにおいては以下を含める
           <ol>
@@ -72,19 +79,35 @@
       <h1>3.入出力仕様</h1>
       <p>以下のリクエスト、レスポンスの仕様を記載する</p> 
       <ol>
-        <li>http://xxxx/custom-msg</code></li>
-        <li>http://xxxx/custom-msg?severtime</li>
+        <li>http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</code></li>
+        <li>http://xxxx/custom-msg?severtime&amp;reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</li>
       </ol>
-      <h2>3.1.http://xxxx/custom-msg</h2>
-      <p><code>http://xxxx/custom-msg</code>は、最初のリクエスト、レスポンスに対応する。レスポンスは図示のような出力となる。</p>
+      <p>上記リクエストにおいて、requesttime=YYYY-MM-DDTHH:mm:ss.sssZの部分は指定しなくてもよい。</p> 
+      <h2>3.1.http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/custom-msg?reqestime=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
       <iframe
         src="./custom-msg.html"
-        height="400"
+        height="600"
         width="600">
       </iframe>
-      <h2>3.2.http://xxxx/custom-msg?servertime</h2>
-        <p><code>http://xxxx/custom-msg</code>は、最初のリクエスト、レスポンスに対応する。レスポンスの本文は以下のような文字列になる。</p>
-      <code>2025-09-23 12:13:45 JST</code>
+      <h2>3.2.http://xxxx/custom-msg?servertime&amp;reqesttime=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/custom-msg?servertime&amp;reqesttime=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
+        <p>Windows環境</p>
+        <pre>
+{
+  "servertime": "2025-09-23 12:13:45 東京 (標準時)",
+  "requesttime": "2025-09-23 12:13:44 東京 (標準時)"
+}
+        </pre>
+        <p>linux環境</p>
+        <pre>
+{
+  "servertime": "2025-09-23 12:13:45 JST",
+  "requesttime": "2025-09-23 12:13:44 JST"
+}
+        </pre>
+      <h2>3.3.reqesttime=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
+      <p>requesttimeが含まれないまたは不正な値の場合は、サーバがリクエストを受理した日時とする。</p>
     </section>
 
   </body>
