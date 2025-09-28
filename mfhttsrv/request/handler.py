@@ -104,7 +104,31 @@ class Handler(server.SimpleHTTPRequestHandler):
                     /* 完全な白ではなく非常に薄いグレーを表示に使用 */
                     color: #cccccc;
                 }}
-          }}
+            }}
+            /* スマートフォン対応 */
+            @media (width <= 450px) {{
+                /* tableのレイアウトを解除して、改行して表示する */
+                main table {{
+                    display: block;
+                }}
+                main table tr {{
+                    display: block;
+                    margin-top: 10px;
+                }}
+                main table tr:first-element {{
+                    margin-top: 0px;
+                }}
+                main table tr td {{
+                    display: block;
+                }}
+            }}
+            @media (width <= 380px) {{
+                /* 改行形式でも幅が狭い場合は、フォントサイズを小さくする */
+                body {{
+                    font-size: 0.8em;
+                }}
+            }}
+
         </style>
     </head>
     <body>
