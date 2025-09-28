@@ -56,7 +56,7 @@ class Handler(server.SimpleHTTPRequestHandler):
         """ カスタムメッセージ処理 """
         # タイムゾーンが付与されたdatetimeオブジェクトを取得
         cur_datetime = datetime.datetime.now().astimezone()
-        date_time = cur_datetime.strftime('%Y-%m-%d %H:%M:%S %Z') 
+        date_time = cur_datetime.strftime('%Y-%m-%d %H:%M:%S.%f %Z') 
         content_str = f"""
 <!doctype html>
 <html>
@@ -117,7 +117,7 @@ class Handler(server.SimpleHTTPRequestHandler):
                 <tr>
                     <!-- 仮の日時、後で修正 -->
                     <td class="requestdate">リクエスト日時</td>
-                    <td class="request-time">2025-09-23 12:32:23 JST</td>
+                    <td class="request-time">2025-09-23 12:32:23.801321 JST</td>
                 </tr>
             </table>
         </main>
