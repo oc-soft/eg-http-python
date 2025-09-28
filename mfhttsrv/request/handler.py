@@ -147,7 +147,9 @@ class Handler(server.SimpleHTTPRequestHandler):
                     color: #cccccc;
                 }}
             }}
+            /* スマートフォン対応 */
             @media (width <= 450px) {{
+                /* tableのレイアウトを解除して、改行して表示する */
                 main table {{
                     display: block;
                 }}
@@ -163,6 +165,7 @@ class Handler(server.SimpleHTTPRequestHandler):
                 }}
             }}
             @media (width <= 380px) {{
+                /* 改行形式でも幅が狭い場合は、フォントサイズを小さくする */
                 body {{
                     font-size: 0.8em;
                 }}
