@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>server-timeテスト</title>
+    <script>
+      (()=>{
+        /**
+         * get datetime string from datetime-input
+         * @return date YYYY-MM-DDTHH:mm:
+         */
+        function getDatetimeFromInput() {
+          const elem = document.getElementById('datetime-input')
+          return elem.value
+        }
+        /**
+         * get datetime from datetime-str input
+         */
+        function getDatetimeFromInputStr() {
+          const elem = document.getElementById('datetime-str')
+          return elem.value
+        }
+        /**
+         * set datetime to datetime-str input
+         */
+        function setDatetimeToInput(datetimeStr) {
+          const elem = document.getElementById('datetime-input')
+
+          elem.value = datetimeStr
+        }
+        /**
+         * set datetime to datetime-str input
+         */
+        function setDatetimeToInputStr(datetimeStr) {
+          const elem = document.getElementById('datetime-str')
+
+          elem.value = datetimeStr
+        }
+        /**
+         * get datetime from datetime-iso-str input
+         */
+        function getDatetimeFromInputISOStr() {
+          const elem = document.getElementById('datetime-iso-str')
+          return elem.value
+        }
+        /**
+         * set datetime to datetime-iso-str input
+         */
+        function setDatetimeToInputIsoStr(datetimeStr) {
+          const elem = document.getElementById('datetime-iso-str')
+          const datetimeValue = Date.parse(datetimeStr) 
+          let inputValue = ""
+          if (!isNaN(datetimeValue)) {
+            inputValue = new Date(datetimeValue).toISOString()
+          }
+          elem.value = inputValue
+        }
+       
+        /**
+         * response change event about datetime-input
+         */
+        function handleChangeDateTimeInput(event) {
+          syncDatetimeInputWithInput()
+        }
+        /**
+         * synchronize datetime-str and datetime-iso-str with datetime-input
+         */
+        function syncDatetimeInputWithInput() {
+          const datetime = getDatetimeFromInput()
+          setDatetimeToInputStr(datetime)
+          setDatetimeToInputIsoStr(datetime)
+        }
+
+        /**
+         * response change event about datetime-input-str
+         */
+        function handleChangeDatetimeStrInput(event) {
+          const datetime = getDatetimeFromInputStr()
+          setDatetimeToInputIsoStr(datetime)
+        }
+
+        /**
+         * update html anchor element with with url and dateTimeStr
+         */
+        function updateAnchor(element, url, dateTimeStr) {
+          if (dateTimeStr) {
+            url = `${url}?request-time=${dateTimeStr}`
+          }
+          element.href = url
+          element.textContent = url
+        }
+
+        /**
+         * synchronize data-link element with datetime-iso-str item
+         */
+        function syncDataLinkWithIsoStr() {
+          const elems = document.querySelectorAll('a[data-link]')
+          const datetimeStr = getDatetimeFromInputISOStr()
+          
+          elems.forEach((elem) => {
+            updateAnchor(elem, elem.dataset.link, datetimeStr)
+          })
+        }
+        
+        /**
+         * response submit event about form
+         */
+        function handleSubmit(event) {
+          syncDataLinkWithIsoStr()
+          event.preventDefault()
+        }
+
+        /**
+         * respond for window load event
+         */
+        function handleLoadEvent() {
+          document.getElementById('datetime-input').addEventListener(
+            'change', handleChangeDateTimeInput)
+          document.getElementById('datetime-str').addEventListener(
+            'change', handleChangeDateTimeInput)
+          document.getElementsByTagName('form')[0].addEventListener(
+            'submit', handleSubmit)
+        }
+
+        window.addEventListener('load', handleLoadEvent)
+      })()
+    </script>
+    <style>
+      h1, h2, h3, h4, h5 {
+        font-size: 1em;
+      }
+      body {
+        font-family: sans-serif;
+        color: #0f0f0f;
+      }
+      input#datetime-str {
+        width: 300px;
+      }
+      input#datetime-iso-str {
+        width: 300px;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+      }
+      main {
+        width: fit-content;
+      }
+      .submit-container {
+        display: flex;
+        justify-content: center;
+      }
+      .links {
+        margin-top: 2em;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #0f0f0f;
+        }
+        body {
+          color: #cccccc;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>server-timeテスト</h1>
+      <form>
+
+        <div>
+          <table>
+            <tr><td>日時</td><td><input id="datetime-input" type="datetime-local"></td></tr>
+            <tr><td>文字列</td><td><input id="datetime-str" type="text" ></td></tr>
+            <tr><td>ISO文字列</td><td><input id="datetime-iso-str" type="text"></td></tr>
+          </table>
+        </div>
+        <div class="submit-container">
+          <input type="submit" value="URL作成">
+        </div>
+      </form>
+      <table class="links">
+        <tr><td>server-time</td><td><a data-link="/server-time"></a></td></tr>
+        <tr><td>custom-msg</td><td><a data-link="/custom-msg"></a></td></tr>
+      </table>
+    </main>
+  </body>
+<!-- vi: se ts=2 sw=2 et: -->
+</html>
