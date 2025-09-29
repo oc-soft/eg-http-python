@@ -17,7 +17,7 @@ class Handler(server.SimpleHTTPRequestHandler):
     @property
     def datetime_fmt(self):
         """ 仕様の日時フォーマット """
-        return '%Y-%m-%d %H:%M:%S %Z'
+        return '%Y-%m-%d %H:%M:%S.%f %Z'
 
     def __init__(self, *args, **kwargs):
         """ Handlerの初期化 """
@@ -180,10 +180,9 @@ class Handler(server.SimpleHTTPRequestHandler):
                     <td>サーバ日時</td>
                     <td class="server-time">{date_time}</td>
                 </tr>
-                <tr>
-                    <!-- 仮の日時、後で修正 -->
-                    <td class="requestdate">リクエスト日時</td>
-                    <td class="request-time">2025-09-23 12:32:23.801321 JST</td>
+                <tr aria-describedby="client-request">
+                    <td>リクエスト日時</td>
+                    <td class="request-time">{req_time}</td>
                 </tr>
             </table>
         </main>
