@@ -1,15 +1,23 @@
 from http import server, HTTPStatus
 # httpパッケージからserverをインポート
-from urllib.parse import parse_qs
-# urllib.parseパッケージからparse_qsをインポート
+from urllib.parse import parse_qs, urlparse
+# urllib.parseパッケージからparse_qs, urlparseをインポート
 from subprocess import Popen, PIPE
 # pythonから任意のプログラムを実行することができるPopenをインポート
 import datetime
 # 日付、時刻関連のパケージをインポート
-
+import json
+# pythonのデータをjson化するパッケージをインポート
+import sys
+# デフォルトの例外を扱うためにインポート
 
 class Handler(server.SimpleHTTPRequestHandler):
     """ httpリクエストを処理する """
+
+    @property
+    def datetime_fmt(self):
+        """ 仕様の日時フォーマット """
+        return '%Y-%m-%d %H:%M:%S %Z'
 
     def __init__(self, *args, **kwargs):
         """ Handlerの初期化 """
@@ -41,22 +49,56 @@ class Handler(server.SimpleHTTPRequestHandler):
     def handle_get(self):
         """独自の応答処理を行う。リクエストが処理できない場合はFalseを返却 """
         result = False
-        if '/custom-msg' == self.path:
-            result = self.handle_get_custom_message()     
-        elif '/todo' == self.path:
+        
+        parse_res = urlparse(self.path)
+        if '/custom-msg' == parse_res.path:
+            result = self.handle_get_custom_message(parse_res.query)
+        elif '/server-time' == parse_res.path:
+            result = self.handle_get_server_time(parse_res.query)
+        elif '/todo' == parse_res.path:
             result = self.handle_get_todo_list()
         return result
-    def handle_get_custom_message(self):
+    def handle_get_custom_message(self, query):
         """ custom-msgのGETメソッド処理"""
+        qparams = parse_qs(query)
+
+        request_time = None
+        if 'request-time' in qparams:
+           request_times = qparams['request-time'] 
+           if request_times:
+               request_time = request_times[0]
         # カスタムメッセージ処理に委譲
-        result = self.handle_custom_message()
+        result = self.handle_custom_message(request_time)
+        return result
+
+    def handle_get_server_time(self, query):
+        """ server-timeのGETメソッド処理"""
+        qparams = parse_qs(query)
+
+        request_time = None
+        if 'request-time' in qparams:
+           request_times = qparams['request-time'] 
+           if request_times:
+               request_time = request_times[0]
+        result = self.handle_server_time(request_time) 
         return result
  
-    def handle_custom_message(self):
+    def handle_custom_message(self, request_time):
         """ カスタムメッセージ処理 """
         # タイムゾーンが付与されたdatetimeオブジェクトを取得
         cur_datetime = datetime.datetime.now().astimezone()
-        date_time = cur_datetime.strftime('%Y-%m-%d %H:%M:%S.%f %Z') 
+        req_time = None
+        if request_time:
+            try:
+                req_time = datetime.datetime.fromisoformat(request_time)
+                req_time = req_time.astimezone()
+            except: 
+                req_time = cur_datetime
+        else:
+            req_time = cur_datetime
+                
+        date_time = cur_datetime.strftime(self.datetime_fmt) 
+        req_time = req_time.strftime(self.datetime_fmt)
         content_str = f"""
 <!doctype html>
 <html>
@@ -167,6 +209,44 @@ class Handler(server.SimpleHTTPRequestHandler):
         self.wfile.write(content)
         return result 
 
+    def handle_server_time(self, request_time):
+        """ サーバ日時をjson形式としてレスポンスを作成"""
+        cur_datetime = datetime.datetime.now().astimezone()
+        req_time = None
+        if request_time:
+            try:
+                req_time = datetime.datetime.fromisoformat(request_time)
+                req_time = req_time.astimezone()
+            except: 
+                req_time = cur_datetime
+        else:
+            req_time = cur_datetime
+        date_time = cur_datetime.strftime(self.datetime_fmt) 
+        req_time = req_time.strftime(self.datetime_fmt)
+        json_obj = {
+            'server-time': date_time,
+            'request-time': req_time
+        }
+        content_str = json.JSONEncoder().encode(json_obj)
+        
+        result = True
+        # strデータからbyteデータへ変換
+        content = content_str.encode('UTF-8') 
+        # 正常に処理が完了したことの応答をブラウザに返却
+        self.send_response(200)
+        # ブラウザに返却するhtmlファイルの情報を設定
+        # データはUTF-8
+        self.send_header("Content-type", "application/json; charset=UTF-8")
+        # データの長さ contentsの長さ
+        self.send_header("Content-Length", str(len(content)))
+        # ブラウザに返却するhtmlファイルの情報の設定完了
+        self.end_headers()
+
+        # htmlデータ本文
+        # byteデータとして書き込み
+        self.wfile.write(content)
+
+        return result 
     def convert_to_html_todo_list(self, todo_list):
         """ TODO リストをhtml形式の文字列に変換する"""
         todo_list_html = []
