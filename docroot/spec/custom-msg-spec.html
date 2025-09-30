@@ -27,7 +27,7 @@
       <h1>1.要件</h1>
       <ol>
         <li>サーバのアクセス日時時を表示する</li>
-        <li>日時にはタイムゾーンを含める</li>
+        <li>日時はサーバローカル表現とし、タイムゾーンを含める</li>
         <li>10秒毎にサーバ日時を更新する</li>
         <li>スマートフォンの表示にも対応する</li>
         <li>ブラウザのダークモードテーマに対応する</li>
@@ -79,13 +79,22 @@
         <li>http://xxxx/custom-msg</code></li>
         <li>http://xxxx/custom-msg?severtime</li>
       </ol>
-      <h2>3.1.http://xxxx/custom-msg</h2>
-      <p><code>http://xxxx/custom-msg</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
+      <p>上記リクエストにおいて、request-time=YYYY-MM-DDTHH:mm:ss.sssZの部分は指定しなくてもよい。</p> 
+      <h2>3.1.http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
+      <p><code>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
       <iframe
         src="./custom-msg.html"
         height="400"
         width="600">
       </iframe>
+      <h3>3.1.1.スマートフォン表示</h3>
+      <p>スマートフォン表示では図示のような出力とする。</p>
+      <iframe
+        src="./custom-msg.html"
+        height="800"
+        width="400">
+      </iframe>
+
       <h2>3.2.http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
       <p><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
         <p>Windows環境</p>
