@@ -26,9 +26,6 @@
       table.requirements tr:last-child td, table.requirements tr:last-child th {
         border-bottom: solid 1px;
       }
-
-
-
       h1, h2, h3, h4, h5 {
         font-size: 1em;
       }
@@ -94,8 +91,8 @@
       <h2>2.2.リクエスト、レスポンスの形式</h2>
         <p>10秒毎の更新を考慮して、以下のリクエスト、レスポンスに対応する。
           <ol>
-            <li>最初のリクエスト(http://xxxx/custom-msg)、レスポンス</li>
-            <li>その後のリクエスト(http://xxx/custom-msg?severtime)、レスポンス</li>
+            <li>最初のリクエスト(<code>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>)、レスポンス</li>
+            <li>その後のリクエスト(<code>http://xxx/sever-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>)、レスポンス</li>
           </ol>
         </p>
         <h3>2.2.1.最初のリクエスト、レスポンス</h3> 
@@ -103,8 +100,8 @@
         <h3>2.2.2.その後のリクエスト、レスポンス</h3>
         <p>ブラウザ上では、カスタムメッセージが表示されている。表示されている情報のうち、サーバアクセス日時のみが10秒毎に更新される。サーバアクセス日時のみのリクエスト、レスポンスを処理する。リクエストに対して、サーバ日時を<span>text/plain</span>レスポンスをおこなう。</p>
         <h4>2.2.2.1.サーバアクセス日時のみリクエスト、レスポンス</h4>
-        <p>ブラウザのjavascript、タイマを使用して、10秒毎のリクエストを行う。受信したレスポンスの文字列で、ページのサーバアクセス日時をを置き換える。</p>
-        <h2>2.2.3.custom-msgレスポンス表示</h2> 
+        <p>ブラウザのjavascript、タイマを使用して、10秒毎のリクエストを行う。受信したレスポンスのjsonオブジェクトから、ページのサーバ日時、リクエスト日時を置き換える。</p>
+        <h2>2.2.3.custom-msg応答表示</h2> 
         <p>最初のレスポンスにおいては以下を含める
           <ol>
             <li><code>viewpot</code>を考慮した<code>meta</code>要素</li>
@@ -118,10 +115,10 @@
       <h1>3.入出力仕様</h1>
       <p>以下のリクエスト、レスポンスの仕様を記載する</p> 
       <ol>
-        <li>http://xxxx/custom-msg</code></li>
-        <li>http://xxxx/custom-msg?severtime</li>
+        <li><code>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code></li>
+        <li><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code></li>
       </ol>
-      <p>上記リクエストにおいて、request-time=YYYY-MM-DDTHH:mm:ss.sssZの部分は指定しなくてもよい。</p> 
+      <p>上記リクエストにおいて、<code>request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>の部分は指定しなくてもよい。</p> 
       <h2>3.1.http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
       <p><code>http://xxxx/custom-msg?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、最初のリクエストとなる。レスポンスは図示のような出力となる。</p>
       <iframe
@@ -138,7 +135,7 @@
       </iframe>
 
       <h2>3.2.http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</h2>
-      <p><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。YYYY-MM-DDTHH:mm:ss.sssZはブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
+      <p><code>http://xxxx/server-time?request-time=YYYY-MM-DDTHH:mm:ss.sssZ</code>は、後続のリクエストとなる。レスポンスの本文は以下のような文字列となる。<code>YYYY-MM-DDTHH:mm:ss.sssZ</code>はブラウザのjavascriptが生成する。リクエスト直前の日時を<code>Date.toISOString()</code>によって文字列としたもの。</p>
         <p>Windows環境</p>
         <pre>
 {
@@ -154,7 +151,7 @@
 }
         </pre>
       <h2>3.3.request-time=YYYY-MM-DDTHH:mm:ss.sssZの処理</h2> 
-      <p>request-timeが含まれないまたは不正な値の場合は、サーバがリクエストを受理した日時とする。</p>
+      <p>request-timeが含まれないまたは不正な値の場合は、サーバアクセス日時と同じ日時とする。</p>
     </section>
   </body>
 <!-- vi: se ts=2 sw=2 et: -->
