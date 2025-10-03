@@ -12,6 +12,23 @@
       table caption {
         text-align: left;
       }
+      table.requirements {
+        border-collapse: collapse;
+      }
+      table.requirements tr td, table.requirements tr th {
+        border-left: solid 1px;
+        border-top: solid 1px;
+        padding: 3px;
+      }
+      table.requirements tr td:last-child, table.requirements tr th:last-child {
+        border-right: solid 1px;
+      }
+      table.requirements tr:last-child td, table.requirements tr:last-child th {
+        border-bottom: solid 1px;
+      }
+
+
+
       h1, h2, h3, h4, h5 {
         font-size: 1em;
       }
@@ -28,15 +45,36 @@
   <body>
     <section>
       <h1>1.要件</h1>
-      <ol>
-        <li>サーバのアクセス日時を表示する</li>
-        <li>クライアントリクエスト日時を表示する</li>
-        <li>日時はサーバローカル表現とし、タイムゾーンを含める</li>
-        <li>10秒毎にサーバ日時を更新する</li>
-        <li>スマートフォンの表示にも対応する</li>
-        <li>ブラウザのダークモードテーマに対応する</li>
-        <li>transitionのアニメーションに対応する</li>
-      </ol>
+      <table class="requirements">
+        <tr><td>1.</td>
+          <td>サーバアクセス日時を表示する</td>
+          <td>ブラウザの表示はサーバ日時としてもよい</td>
+        </tr>
+        <tr><td>2.</td>
+          <td>クライアントリクエスト日時を表示する</td>
+          <td>ブラウザの表示はリクエスト日時としてもよい</td>
+        </tr>
+        <tr><td>3.</td>
+          <td>日時はサーバローカル表現とし、タイムゾーンを含める</td>
+          <td></td>
+        </tr>
+        <tr><td>4.</td>
+          <td>10秒毎にサーバアクセス日時、クライアントアクセス日時を更新する</td>
+          <td></td>
+        </tr>
+        <tr><td>5.</td>
+          <td>スマートフォンの表示に対応する</td>
+          <td></td>
+        </tr>
+        <tr><td>6.</td>
+          <td>ブラウザのダークモードテーマに対応する</td>
+          <td></td>
+        </tr>
+        <tr><td>7.</td>
+          <td>transitionのアニメーションに対応する</td>
+          <td></td>
+        </tr>
+      </table>
     </section>
     <section>
       <h1>2.設計</h1>
