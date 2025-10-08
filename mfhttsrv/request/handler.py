@@ -189,8 +189,8 @@ class Handler(server.SimpleHTTPRequestHandler):
                     const res = await window.fetch(requestUrl)
                     if (res.ok) {{
                         // 受信がOK
-                            // 受信結果からjson形式のオブジェクトを取得
-                            result = res.json() 
+                        // 受信結果からjson形式のオブジェクトを取得
+                        result = res.json() 
                     }}
                 }} catch (error) {{
                     // 送受信のエラーが発生した場合の制御
