@@ -107,7 +107,8 @@ class Handler(server.SimpleHTTPRequestHandler):
         content_str_stream = io.StringIO()
 
         # custom-msg.txtファイルを開き、ファイルシステムオブジェクトを得る
-        with open(custom_msg_path) as fp:
+        # ファイルはutf-8で保存しているので、utf-8の変換をして読み取る。
+        with open(custom_msg_path, encoding='utf_8') as fp:
             # custom-msg.txtファイルの内容をcontent_str_streamにコピー
             self.copyfile(fp, content_str_stream)
         # io.StringIOオブジェクトが保持しているデータを文字列として取り出す 
