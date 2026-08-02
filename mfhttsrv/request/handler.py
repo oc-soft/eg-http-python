@@ -4,6 +4,7 @@ from urllib.parse import parse_qs, urlparse
 # urllib.parseパッケージからparse_qs, urlparseをインポート
 from subprocess import Popen, PIPE
 # pythonから任意のプログラムを実行することができるPopenをインポート
+import io
 import datetime
 # 日付、時刻関連のパケージをインポート
 import json
@@ -99,182 +100,20 @@ class Handler(server.SimpleHTTPRequestHandler):
                 
         date_time = cur_datetime.strftime(self.datetime_fmt) 
         req_time = req_time.strftime(self.datetime_fmt)
-        content_str = f"""
-<!doctype html>
-<html>
-    <head>
-        <!-- スマートフォン対応 -->
-        <meta name="viewport" content="width=device-width; initial-scale=1.0">
-        <meta charset="utf-8">
-        <title>カスタムメッセージ</title>
-        <style>
-            body {{
-                /* bodyの高さを表示高さと一致させる*/ 
-                height: calc(100vh - 2 * 8px);
-                /* 日本語でいうゴシック的なフォントを使用 */
-                font-family: sans-serif;
-                /* 完全な黒ではなく非常に濃いグレーを表示に使用 */
-                color: #0f0f0f;
-                margin: 8px;
-            }}
-            main:first-of-type {{
-                /* 縦方向の位置調整をしたい */
-                position: absolute; 
-                /* 日時を表示する位置を画面中央やや上にする */
-                top: 20%;
-                /* 幅は包含する要素幅と同じとする */
-                left: 0;
-                right: 0;
-                /* 日時表示テーブル横方向を中央にしたい */
-                display: flex;
-                justify-content: center;
-            }}
-            main table {{
-                /* 3秒で徐々に文字が表示されるように設定 */
-                transition: opacity 3s; 
-                @starting-style {{
-                   opacity: 0; 
-                }}
-            }}
-            /* ダークモード */
-            @media (prefers-color-scheme: dark) {{
-                html {{
-                    /* 完全な黒ではなく非常に濃いグレーを表示に使用 */
-                    background: #0f0f0f;
-                }}
-                body {{
-                    /* 完全な白ではなく非常に薄いグレーを表示に使用 */
-                    color: #cccccc;
-                }}
-            }}
-            /* スマートフォン対応 */
-            @media (width <= 450px) {{
-                /* tableのレイアウトを解除して、改行して表示する */
-                main table {{
-                    display: block;
-                }}
-                main table tr {{
-                    display: block;
-                    margin-top: 10px;
-                }}
-                main table tr:first-element {{
-                    margin-top: 0px;
-                }}
-                main table tr td {{
-                    display: block;
-                }}
-            }}
-            @media (width <= 380px) {{
-                /* 改行形式でも幅が狭い場合は、フォントサイズを小さくする */
-                body {{
-                    font-size: 0.8em;
-                }}
-            }}
 
-        </style>
-        <script>
-            /**
-             * サーバ日時を取得
-             * @return json形式のサーバ日時、リクエスト日時
-             */
-            async function getServerTime() {{
-                // リクエスト日時 
-                const currentTime = new Date().toISOString() 
-                let requestUrl = `/server-time?request-time=${{currentTime}}`
-                // リクエストURLを生成(URLで有効な文字だけにエスケープ)
-                requestUrl = encodeURI(requestUrl)
-                let result = undefined
-                try {{
-                    // リクエストを送信し、結果を受信
-                    const res = await window.fetch(requestUrl)
-                    if (res.ok) {{
-                        // 受信がOK
-                        // 受信結果からjson形式のオブジェクトを取得
-                        result = res.json() 
-                    }}
-                }} catch (error) {{
-                    // 送受信のエラーが発生した場合の制御
-                    // 特に何も処理を実施しない
-                }}
-                return result
-            }}
-            /**
-             * HTML要素を更新
-             *
-             */
-            function updateElement(elem, datetime) {{
-               elem.textContent = datetime 
-            }}
-            /**
-             * サーバ日時を表示しているHTML要素を取得
-             * @return サーバ日時を表示しているHTML要素
-             */
-            function getServerTimeElement() {{
-                return document.getElementsByClassName('server-time')[0]
-            }}
-            /**
-             * リクエスト日時を表示しているHTML要素を取得
-             * @return リクエスト日時を表示しているHTML要素
-             */
-            function getRequestTimeElement() {{
-                return document.getElementsByClassName('request-time')[0]
-            }}
+        # assets/content-mng.txtのdocoroot相対のファイルシステムパスにする。  
+        custom_msg_path = self.translate_path('assets/custom-msg.txt') 
+        # メモリ上に文字列データを書き込むファイルシステムオブジェクトを作成
+        content_str_stream = io.StringIO()
 
-            /**
-             * サーバ日時、リクエスト日時を更新
-             */
-            async function updateServerTime() {{
-                // サーバ日時を取得
-                const resp = await getServerTime()
-                if (resp) {{
-                    // 取得に成功
-                    if (resp['server-time'] && resp['request-time']) {{
-                        // 受信したjsonオブジェクトにserver-time、request-time
-                        // の要素がある場合にHTML要素を更新する
-                        updateElement(getServerTimeElement(),
-                            resp['server-time'])
-                        updateElement(getRequestTimeElement(),
-                            resp['request-time'])
-
-                    }}
-                }}
-            }}
-            /**
-             * サーバ日時を更新し続ける
-             */
-            async function updateServerTimeForever() {{
-                // サーバ日時を更新
-                await updateServerTime() 
-                // 更新が完了したら、10秒後にこの処理が呼ばれるように設定
-                setTimeout(updateServerTimeForever, 1000 * 10)
-            }}
-            /**
-             * HTMLページの読み込みが完了した時の処理
-             */
-            function handleLoad() {{
-                // 10秒後からサーバ日時を更新し続ける
-                setTimeout(updateServerTimeForever, 1000 * 10)
-            }}
-            // HTMLページ読み込みが完了した時に処理が呼ばれるように設定
-            window.addEventListener('load', handleLoad)
-        </script>
-    </head>
-    <body>
-        <main>
-            <table>
-                <tr aria-describedby="server-response">
-                    <td>サーバ日時</td>
-                    <td class="server-time">{date_time}</td>
-                </tr>
-                <tr aria-describedby="client-request">
-                    <td>リクエスト日時</td>
-                    <td class="request-time">{req_time}</td>
-                </tr>
-            </table>
-        </main>
-    </body>
-</html>
-        """
+        # custom-msg.txtファイルを開き、ファイルシステムオブジェクトを得る
+        with open(custom_msg_path) as fp:
+            # custom-msg.txtファイルの内容をcontent_str_streamにコピー
+            self.copyfile(fp, content_str_stream)
+        # io.StringIOオブジェクトが保持しているデータを文字列として取り出す 
+        temp_str = content_str_stream.getvalue()
+        # {date_time}、{req_time}を日時に置き換える
+        content_str = temp_str.format(date_time=date_time, req_time=req_time)
         result = True
 
         # strデータからbyteデータへ変換

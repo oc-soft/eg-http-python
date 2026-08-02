@@ -16,12 +16,16 @@
     const diagramTargets = [
       [
         'load-template-before.mermaid',
-        'load-template-before'
+        'load-template-before',
       ],
       [
         'load-template-after.mermaid',
         'load-template-after'
       ],
+      [
+        'template-location.mermaid',
+        'template-location'
+      ]
     ]
     for (const diagramTarget of diagramTargets) {
      

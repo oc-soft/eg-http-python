@@ -25,4 +25,21 @@
     --main-color-disable-fg: color-mix(in oklab, var(--main-color-fg) 80%, var(--main-color-bg));
   }
 }
+
+svg g.node rect.basic:hover {
+  animation: node-flush 2s linear infinite !important; 
+}
+
+@keyframes node-flush {
+  0% {
+    fill: var(--main-color-bg);
+  }
+  50% {
+    fill: var(--main-color-disable-fg);
+  }
+  100% {
+    fill: var(--main-color-bg);
+  }
+}
+
 /* vi: se ts=2 sw=2 et: */
