@@ -1,0 +1,22 @@
+.code td {
+  font-family: monospace;
+  border-bottom: 2px solid transparent; 
+}
+.code td:nth-child(2):hover {
+  animation-duration: 2s;
+  animation-name: border-bottom-flush; 
+  animation-iteration-count: infinite;
+}
+
+@keyframes border-bottom-flush {
+  0% {
+    border-bottom: 2px solid transparent; 
+  }
+  50% {
+    border-bottom: 2px solid red;
+  }
+  100% {
+    border-bottom: 2px solid transparent; 
+  }
+}
+/* vi: se ts=2 sw=2 et: */

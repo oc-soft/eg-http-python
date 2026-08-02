@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+    <meta charset="utf-8" /> 
+    <title>リファクタリング</title>
+    <link href="refactor.css" rel="stylesheet" />
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.mjs';
+      const darkMode = window.matchMedia(
+        '(prefers-color-scheme: dark)').matches;
+      mermaid.initialize({
+        securityLevel: 'loose',
+        startOnLoad: false,
+        theme: darkMode ? 'neo-dark' : 'neo',
+        darkMode
+      });
+
+      window.mermaid = mermaid
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+    <script src="refactor.js"></script>
+  </head>
+  <body>
+    <h1>ソースコード改修</h1> 
+    <div class="refactor-1">
+      <div>
+        <label>
+          <input type="radio"
+            name="refactor" value="before"
+            checked/>
+          修正前 
+        </label>
+      </div>
+      <div>
+        <label>
+          <input type="radio"
+          name="refactor" value="after" />
+          修正後
+        </label>
+      </div>
+      <img src="img/refactor-1-before.drawio.svg"
+        data-refactor="before"
+        style="display: block;"
+        />  
+      <img
+        src="img/refactor-1-after.drawio.svg"
+        data-refactor="after"
+        style="display: none;"
+        />  
+    </div>
+    <h1>フロー</h1>
+    <div id="load-template-before"
+      style="display: block;"
+      data-refactor="before">
+    </div>
+    <div id="load-template-after"
+      style="display: none;"
+      data-refactor="after">
+    </div>
+    <div id="design">
+    </div>
+  </body>
+<!-- vi: se ts=2 sw=2 et: -->
+</html>

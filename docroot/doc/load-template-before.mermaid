@@ -1,0 +1,12 @@
+flowchart TD
+  begin000@{shape: circle, label: "開始" }
+  end000@{shape: stadium, label: "終了" }
+
+  proc010@{shape: rect, label: "時刻を取得"} 
+  proc020@{shape: rect, label: "表示文字列に時刻を設定"}
+  proc100@{shape: rect, label: "表示文字列を出力"}
+  proc110@{shape: rect, label: "Trueを返却"}
+
+  begin000 --> proc010 --> proc020 --> proc100
+  proc100 --> proc110 --> end000
+
