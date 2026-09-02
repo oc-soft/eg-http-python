@@ -1,0 +1,5 @@
+
+sequenceDiagram
+  ブラウザ ->>+ サーバ: POST /todo new-item=ジュースを買う&done=マイナンバーカード更新&done=送金
+
+  サーバ ->>- ブラウザ: TODOリスト(html形式) <input type="checkbox" />ジュースを買う

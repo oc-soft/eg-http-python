@@ -1,0 +1,35 @@
+flowchart TD
+
+  start000@{ shape: circle, label: "開始" }
+  end000@{ shape: stadium, label: "終了" }
+
+  init010@{ shape: rect, label: "html表示用TODO項目リスト作成" }
+
+  proc010@{ shape: rect, label: "リクエストから完了済TODO項目項目取得" }
+  proc020@{ shape: rect, label: "完了済項目をtodo.txtから削除" }
+  proc030@{ shape: rect, label: "リクエストから新規アイテムを取得" }
+  proc040@{ shape: rect, label: "新規アイテムをtodo.txtに追加" }
+
+  
+  proc050@{shape: rect, label: "TODO項目読み取り"}
+  proc060@{shape: rect, label: "TODO項目をhtml表示用TODO項目リストに追加"}
+
+  proc100@{shape: rect, label: "html表示用TODO項目リストからhtml形式TODOリスト作成" }
+ 
+  
+  dec010@{ shape: diamond, label: "todo.txtあり?"}
+  dec020@{ shape: diamond, label: "done項目あり?" }
+  dec030@{ shape: diamond, label: "new-itemあり?" }
+  dec040@{ shape: diamond, label: "todo.txtあり?"}
+
+  start000 --> init010 --> dec010
+  dec010 -- Yes --> proc010 --> dec020
+
+  dec020 -- Yes --> proc020 --> proc010
+  dec020 -- No --> proc030 --> dec030
+  dec030 -- Yes --> proc040 --> dec040
+  dec030 -- No --> dec040 
+  dec040 -- Yes --> proc050 --> proc060 --> proc100
+  dec040 -- No --> proc100
+  proc100 --> end000 
+
