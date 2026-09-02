@@ -1,0 +1,21 @@
+:root {
+/*
+  --main-bg-color: #ffffff;
+  --main-fg-color: #0f0f0f;
+
+  background: var(--main-bg-color);
+  color: var(--main-fg-color);
+*/
+  font-family: system-ui;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+/*
+    --main-fg-color: #ffffff;
+    --main-bg-color: #0f0f0f;
+*/
+  }
+}
+
+/* vi: se ts=2 sw=2 et: */
