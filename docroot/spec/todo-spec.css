@@ -25,4 +25,10 @@
   }
 }
 
+
+div.preview iframe {
+  width: 300px;
+  height: 200px;
+}
+
 /* vi: se ts=2 sw=2 et: */

@@ -1,27 +1,37 @@
 <!doctype html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8">
-        <meta name="color-scheme" content="light dark" />
-        <title>TODOリスト</title>
-    </head>
-    <body>
-        <h1>TODOリスト</h1>
-        <div>
-            <label>新規アイテム:<input name="new-item" type="text"></label>
-            <input type="submit">
-
-            <!-- 送信ボタン -->
-                <table>
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td><label>ジュースを買う</label><td>
-                  </tr>
-                </table>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark" />
+    <title>TODOリスト</title>
+    <link href="todo-spec/todo.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="top-pain">
+        <div class="control">
+          <button>TODOリスト更新</button>
         </div>
-    </body>
+        <div class="control">
+          <label>新規項目
+            <input name="new-item" type="text">
+          </label>
+        </div>
+      </div>
+      <div class="todo-items">
+        <ul> 
+          <li><label><input type="checkbox" />お米</label></li>
+          <li><label><input type="checkbox" />小麦粉</label></li>
+          <li><label><input type="checkbox" />タコ</label></li>
+          <li><label><input type="checkbox" />紅ショウガ</label></li>
+          <li><label><input type="checkbox" />長ネギ</label></li>
+          <li><label><input type="checkbox" />切手</label></li>
+          <li><label><input type="checkbox" />封筒</label></li>
+          <li><label><input type="checkbox" />電池</label></li>
+        </ul>
+      </div>
+    </div>
+  </body>
 <!-- vi: se ts=2 sw=2 et: --> 
 </html>
-
-

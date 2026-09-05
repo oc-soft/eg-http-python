@@ -1,22 +1,29 @@
 <!doctype html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8">
-        <meta name="color-scheme" content="light dark" />
-        <title>TODOリスト</title>
-        <style>
-        </style>
-    </head>
-    <body>
-        <h1>TODOリスト</h1>
-        <div>
-            <label>新規アイテム:<input name="new-item" type="text"></label>
-            <!-- 送信ボタン -->
-            <input type="submit">
-            <table></table>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark" />
+    <title>TODOリスト</title>
+    <link href="todo-spec/todo.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div>
+      <div class="top-pain">
+        <div class="control">
+          <button>TODOリスト更新</button>
         </div>
-    </body>
+        <div class="control">
+          <label>新規項目
+            <input name="new-item" type="text">
+          </label>
+        </div>
+      </div>
+      <div class="todo-items">
+        <ul></ul>
+      </div>
+    </div>
+  </body>
 <!-- vi: se ts=2 sw=2 et: --> 
 </html>
 
