@@ -18,12 +18,13 @@ flowchart TD
  
   
   dec010@{ shape: diamond, label: "todo.txtあり?"}
-  dec020@{ shape: diamond, label: "done項目あり?" }
-  dec030@{ shape: diamond, label: "new-itemあり?" }
+  dec020@{ shape: diamond, label: "完了項目あり?" }
+  dec030@{ shape: diamond, label: "新規アイテムあり?" }
   dec040@{ shape: diamond, label: "todo.txtあり?"}
 
   start000 --> init010 --> dec010
   dec010 -- Yes --> proc010 --> dec020
+  dec010 -- No --> proc030 
 
   dec020 -- Yes --> proc020 --> proc010
   dec020 -- No --> proc030 --> dec030
