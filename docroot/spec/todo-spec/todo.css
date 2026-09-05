@@ -1,6 +1,6 @@
 :root {
-  --main-color-fg: rgba(255, 255, 255, 0.87);
-  --main-color-bg: #242424;
+  --main-color-bg: rgba(255, 255, 255, 0.87);
+  --main-color-fg: #242424;
  
   background: var(--main-color-bg);
   color: var(--main-color-fg);
