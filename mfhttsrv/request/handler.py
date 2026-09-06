@@ -181,7 +181,7 @@ class Handler(server.SimpleHTTPRequestHandler):
             html_item = f"""
                 <li>
                     <label>
-                        <input type="checkbox" />{item}
+                        <input type="checkbox" name="done" value="{item}" />{item}
                     </label>
                 </li>
             """ 
@@ -194,14 +194,15 @@ class Handler(server.SimpleHTTPRequestHandler):
             </ul>
         """
         return result
-    def create_todo_list_page(self, new_item = None):
-        """ TODOリストページの作成 """
+    def create_todo_list_page(self, new_item = None, done_items = None):
+        """
+        TODOリストページの作成
+        new_itemがある場合は、TODOリストに追加される。
+        done_itemsがある場合は、done_itemsに一致する項目は削除される。
+        """
         # htmlページでは、formタグでサーバにデータを送信できる。
-        if new_item:
-            todo_list = []
-            self.update_todo_list(new_item, todo_list)
-        else:
-            todo_list = self.read_todo_list()
+        todo_list = []
+        self.update_todo_list(new_item, done_items, todo_list)
         todo_list_html = self.convert_to_html_todo_list(todo_list)
         # assets/todo-tmpl.htmlのdocoroot相対のファイルシステムパスにする。  
         todo_tmpl_path = self.translate_path('assets/todo-tmpl.html') 
@@ -218,17 +219,20 @@ class Handler(server.SimpleHTTPRequestHandler):
         result = template_str.format(todo_list_html=todo_list_html)
         return result
 
-    def update_todo_list(self, new_item, todo_list = None):
+    def update_todo_list(self, new_item, done_items = None, todo_list = None):
         """
         todoリストにnew_itemを追加する。
+        done_itemsが指定されていれば、done_itemsの項目はtodo_listから削除される。
         todo_listが指定されていれば、todo_listに保存した要素の一覧が
         格納される。    
         """
         lines = None
         # 両端の空白を削除  
-        new_item = new_item.strip()
-        # 末端に改行を追加
-        new_item += "\n"
+        if new_item is not None:
+            new_item = new_item.strip()
+        if new_item:
+            # 末端に改行を追加
+            new_item += "\n"
 
         # user-data/todo.txtをdocoroot相対のファイルシステムパスにする。  
         todo_path = self.translate_path('user-data/todo.txt') 
@@ -239,39 +243,43 @@ class Handler(server.SimpleHTTPRequestHandler):
                 lines = f.readlines()
         except:
             pass
-        try:    
-            # user-dataをdocoroot相対のファイルシステムパスにする。  
-            user_data_dir = self.translate_path('user-data')  
-            # 階層(ディレクトリ)が存在しない場合があるので、階層を作成する。
-            os.makedirs(user_data_dir, exist_ok=True)
-            with open(todo_path, mode = 'a', encoding = 'UTF-8') as f:
-                f.writelines([new_item])
-        except Exception as e:
-            print(e) 
-            pass
-        if todo_list is not None:
-            if lines is not None:
-                lines.append(new_item)
-                lines.reverse()
-                todo_list.extend(lines)
-            else:
-                todo_list.append(new_item) 
 
-    def read_todo_list(self):
-        """
-        保存しているtodoの一覧を所得する。
-        """
-        result = [] 
-        try: 
-            todo_path = self.translate_path('user-data/todo.txt') 
-            with open(todo_path, mode = 'r', encoding = 'UTF-8') as f:
-                # todo.txtがあればfにデータが読み書き情報が格納されている 
-                # todo.txtがない場合は、ここの処理はとおらない。
-                result = f.readlines()
-                result.reverse()
-        except:
-            pass
-        return result 
+        if done_items and lines:
+            # 引数のdone_itemsをコピーする
+            # tmp_done_itemsの内容は変化する
+            tmp_done_items = [ *done_items ]
+            tmp_lines = []
+            for idx in range(len(lines) - 1, -1, -1):
+                item = lines[idx]
+                try:
+                    done_idx = tmp_done_items.index(item.strip())
+                    tmp_done_items.pop(done_idx)
+                except ValueError:
+                    tmp_lines.insert(0, item)
+            lines = tmp_lines
+ 
+        if new_item:
+            if lines:
+                lines.append(new_item)
+            else:
+                lines = [new_item]
+
+        if lines:
+            try:    
+                # user-dataをdocoroot相対のファイルシステムパスにする。  
+                user_data_dir = self.translate_path('user-data')  
+                # 階層(ディレクトリ)が存在しない場合があるので、階層を作成する。
+                os.makedirs(user_data_dir, exist_ok=True)
+                with open(todo_path,
+                          mode='w', encoding='UTF-8', newline='\n') as f:
+                    f.writelines(lines)
+            except Exception as e:
+                print(e) 
+                pass
+        if todo_list is not None:
+            if lines:
+                lines.reverse()
+                todo_list.extend([x.strip() for x in lines])
 
     def handle_get_todo_list(self):
         """ GETメソッド todo処理"""
@@ -304,12 +312,16 @@ class Handler(server.SimpleHTTPRequestHandler):
             # パースしたnew_itemは、listの形式になっている。
             # name=value&name=value1のような形式でデータ送られてくる
             # 可能性があるため
-            # 一つ目の値をコメントとする。
-            # フォームではcommentは1つしか送信されない
+            # 一つ目の値を新規TODOとする。
+            # フォームでは新規TODOは1つしか送信されない
             new_item = new_items[0] 
 
+        done_items = None
+        if 'done' in request_param:
+            done_items = request_param['done']
+
         # ページデータを作成
-        page = self.create_todo_list_page(new_item)
+        page = self.create_todo_list_page(new_item, done_items)
         
         # ページをクライアント(ブラウザ)に返却
         result = self.response_todo_list_page(page)
