@@ -1,19 +1,26 @@
 <!doctype html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <title>TODOリスト</title>
-        <style>
-        </style>
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark" />
+    <title>TODOリスト</title>
+    <link href="assets/todo.css" rel="stylesheet" />
     <body>
-        <h1>TODOリスト</h1>
-        <div>
+        <div class="main">
             <form action="todo" method="post">
-                <label>新規アイテム:<input name="new-item" type="text"></label>
-                {todo_list_html}  
-                <!-- 送信ボタン -->
-                <input type="submit">
+                <div class="top-pain">
+                    <div class="control">
+                        <button>TODOリスト更新</button>
+                    </div>
+                <div class="control">
+                    <label>新規項目
+                        <input name="new-item" type="text" />
+                    </label>
+                </div>
+                <div class="todo-items">
+                    {todo_list_html}  
+                </div>
             </form>
         </div>
     </body>

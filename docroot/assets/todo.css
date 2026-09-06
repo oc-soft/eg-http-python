@@ -1,0 +1,49 @@
+:root {
+  --main-color-bg: rgba(255, 255, 255, 0.87);
+  --main-color-fg: #242424;
+ 
+  background: var(--main-color-bg);
+  color: var(--main-color-fg);
+  --body-margin: 8px;
+  font-family: system-ui;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --main-color-bg: #213547;
+    --main-color-fg: #ffffff;
+  }
+}
+
+body {
+  margin: var(--body-margin);
+  width: calc(100vw - 2 * var(--body-margin));
+  height: calc(100vh - 2 * var(--body-margin));
+  overflow: hidden;
+}
+
+div.main {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto;
+
+  
+}
+
+div.control {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+div.todo-items {
+  overflow: auto;
+}
+
+div.todo-items ul {
+  padding-inline-start: 0;
+  list-style-type: none;
+}
+
+/* vi: se ts=2 sw=2 et: */

@@ -179,16 +179,19 @@ class Handler(server.SimpleHTTPRequestHandler):
         todo_list_html = []
         for item in todo_list:
             html_item = f"""
-                <tr><td><input type="checkbox"></td>
-                <td><label>{item}</label></td></tr>
+                <li>
+                    <label>
+                        <input type="checkbox" />{item}
+                    </label>
+                </li>
             """ 
             todo_list_html.append(html_item)
-        table_contents = "\n".join(todo_list_html)
+        list_contents = "\n".join(todo_list_html)
 
         result = f"""
-            <table>
-                {table_contents}
-            </table>
+            <ul>
+                {list_contents}
+            </ul>
         """
         return result
     def create_todo_list_page(self, new_item = None):
