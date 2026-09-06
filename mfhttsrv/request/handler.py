@@ -200,29 +200,19 @@ class Handler(server.SimpleHTTPRequestHandler):
         else:
             todo_list = self.read_todo_list()
         todo_list_html = self.convert_to_html_todo_list(todo_list)
+        # assets/todo-tmpl.htmlのdocoroot相対のファイルシステムパスにする。  
+        todo_tmpl_path = self.translate_path('assets/todo-tmpl.html') 
+        content_str_stream = io.StringIO()
 
-        result = f"""
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>TODOリスト</title>
-        <style>
-        </style>
-    </head>
-    <body>
-        <h1>TODOリスト</h1>
-        <div>
-            <form action="todo" method="post">
-                <label>新規アイテム:<input name="new-item" type="text"></label>
-                {todo_list_html}  
-                <!-- 送信ボタン -->
-                <input type="submit">
-            </form>
-        </div>
-    </body>
-</html>
-        """
+        # todo-tmpl.htmlファイルを開き、ファイルシステムオブジェクトを得る
+        # ファイルはutf-8で保存しているので、utf-8の変換をして読み取る。
+        with open(todo_tmpl_path, encoding='utf_8') as fp:
+            # todo-tmpl.htmlファイルの内容をcontent_str_streamにコピー
+            self.copyfile(fp, content_str_stream)
+        # io.StringIOオブジェクトが保持しているデータを文字列として取り出す 
+        template_str = content_str_stream.getvalue()
+        # {todo_list_html}を置き換える
+        result = template_str.format(todo_list_html=todo_list_html)
         return result
 
     def update_todo_list(self, new_item, todo_list = None):
