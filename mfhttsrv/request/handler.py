@@ -4,6 +4,8 @@ from urllib.parse import parse_qs, urlparse
 # urllib.parseパッケージからparse_qs, urlparseをインポート
 from subprocess import Popen, PIPE
 # pythonから任意のプログラムを実行することができるPopenをインポート
+import os
+# 階層作成などが含まれるパッケージをインポート
 import io
 import datetime
 # 日付、時刻関連のパケージをインポート
@@ -234,15 +236,22 @@ class Handler(server.SimpleHTTPRequestHandler):
         new_item = new_item.strip()
         # 末端に改行を追加
         new_item += "\n"
+
+        # user-data/todo.txtをdocoroot相対のファイルシステムパスにする。  
+        todo_path = self.translate_path('user-data/todo.txt') 
         try: 
-            with open('todo.txt', mode = 'r', encoding = 'UTF-8') as f:
+            with open(todo_path, mode = 'r', encoding = 'UTF-8') as f:
                 # todo.txtがあればfにデータが読み書き情報が格納されている 
                 # todo.txtがない場合は、ここの処理はとおらない。
                 lines = f.readlines()
         except:
             pass
         try:    
-            with open('todo.txt', mode = 'a', encoding = 'UTF-8') as f:
+            # user-dataをdocoroot相対のファイルシステムパスにする。  
+            user_data_dir = self.translate_path('user-data')  
+            # 階層(ディレクトリ)が存在しない場合があるので、階層を作成する。
+            os.makedirs(user_data_dir, exist_ok=True)
+            with open(todo_path, mode = 'a', encoding = 'UTF-8') as f:
                 f.writelines([new_item])
         except Exception as e:
             print(e) 
@@ -261,7 +270,8 @@ class Handler(server.SimpleHTTPRequestHandler):
         """
         result = [] 
         try: 
-            with open('todo.txt', mode = 'r', encoding = 'UTF-8') as f:
+            todo_path = self.translate_path('user-data/todo.txt') 
+            with open(todo_path, mode = 'r', encoding = 'UTF-8') as f:
                 # todo.txtがあればfにデータが読み書き情報が格納されている 
                 # todo.txtがない場合は、ここの処理はとおらない。
                 result = f.readlines()
