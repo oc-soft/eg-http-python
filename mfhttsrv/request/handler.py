@@ -219,6 +219,15 @@ class Handler(server.SimpleHTTPRequestHandler):
         result = template_str.format(todo_list_html=todo_list_html)
         return result
 
+    def create_todo_list_json(self, new_item = None, done_items = None):
+        """
+        json形式のtodoリストを生成する。
+        """
+        todo_list = []
+        self.update_todo_list(new_item, done_items, todo_list)
+        result = json.JSONEncoder().encode(todo_list)
+        return result
+
     def update_todo_list(self, new_item, done_items = None, todo_list = None):
         """
         todoリストにnew_itemを追加する。
@@ -283,11 +292,16 @@ class Handler(server.SimpleHTTPRequestHandler):
 
     def handle_get_todo_list(self):
         """ GETメソッド todo処理"""
-        # ページデータを作成
-        page = self.create_todo_list_page()
-        
-        # ページをクライアント(ブラウザ)に返却
-        result = self.response_todo_list_page(page)
+        content_type = self.headers.get('Content-Type') 
+        if 'application/json' != content_type:
+            # ページデータを作成
+            page = self.create_todo_list_page()
+            
+            # ページをクライアント(ブラウザ)に返却
+            result = self.response_todo_list_page(page)
+        else:
+            json_str = self.create_todo_list_json()     
+            result = self.response_general_json(json_str)
         return result 
 
     def handle_post_todo_list(self):
@@ -321,12 +335,16 @@ class Handler(server.SimpleHTTPRequestHandler):
             done_items = request_param['done']
 
         # ページデータを作成
-        page = self.create_todo_list_page(new_item, done_items)
-        
-        # ページをクライアント(ブラウザ)に返却
-        result = self.response_todo_list_page(page)
+        content_type = self.headers.get('Content-Type') 
+        if 'application/json' != content_type:
+            page = self.create_todo_list_page(new_item, done_items)
+            
+            # ページをクライアント(ブラウザ)に返却
+            result = self.response_todo_list_page(page)
+        else:
+            json_str = self.create_todo_list_json(new_item, done_items)
+            result = self.response_general_json(json_str)
         return result 
-
         
     def response_todo_list_page(self, page):
         """ TODOリストページをクライアント(ブラウザ)に返却 """
@@ -353,7 +371,24 @@ class Handler(server.SimpleHTTPRequestHandler):
         # byteデータとして書き込み
         self.wfile.write(content)
         return result
+    def response_general_json(self, content_str):
+        """ 一般的なjson文字列をブラウザに返却"""
+        content = content_str.encode('UTF-8') 
+        # 正常に処理が完了したことの応答をブラウザに返却
+        self.send_response(200)
+        # ブラウザに返却するhtmlファイルの情報を設定
+        # データはUTF-8
+        self.send_header("Content-type", "application/json; charset=UTF-8")
+        # データの長さ contentsの長さ
+        self.send_header("Content-Length", str(len(content)))
+        # ブラウザに返却するhtmlファイルの情報の設定完了
+        self.end_headers()
 
+        # htmlデータ本文
+        # byteデータとして書き込み
+        self.wfile.write(content)
+
+ 
     def handle_post(self):
         """ 独自のPOST処理 """ 
         result = False 
