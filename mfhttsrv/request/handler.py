@@ -292,7 +292,7 @@ class Handler(server.SimpleHTTPRequestHandler):
 
     def handle_get_todo_list(self):
         """ GETメソッド todo処理"""
-        content_type = self.headers.get('Content-Type') 
+        content_type = self.headers.get('Accept') 
         if 'application/json' != content_type:
             # ページデータを作成
             page = self.create_todo_list_page()
@@ -335,7 +335,7 @@ class Handler(server.SimpleHTTPRequestHandler):
             done_items = request_param['done']
 
         # ページデータを作成
-        content_type = self.headers.get('Content-Type') 
+        content_type = self.headers.get('Accept') 
         if 'application/json' != content_type:
             page = self.create_todo_list_page(new_item, done_items)
             
@@ -376,7 +376,7 @@ class Handler(server.SimpleHTTPRequestHandler):
         content = content_str.encode('UTF-8') 
         # 正常に処理が完了したことの応答をブラウザに返却
         self.send_response(200)
-        # ブラウザに返却するhtmlファイルの情報を設定
+        # ブラウザに返却するjsonの情報を設定
         # データはUTF-8
         self.send_header("Content-type", "application/json; charset=UTF-8")
         # データの長さ contentsの長さ
@@ -384,7 +384,7 @@ class Handler(server.SimpleHTTPRequestHandler):
         # ブラウザに返却するhtmlファイルの情報の設定完了
         self.end_headers()
 
-        # htmlデータ本文
+        # jsonデータ本文
         # byteデータとして書き込み
         self.wfile.write(content)
         return True
