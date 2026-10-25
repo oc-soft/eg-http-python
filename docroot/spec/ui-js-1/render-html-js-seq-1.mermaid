@@ -5,7 +5,7 @@ sequenceDiagram
     activate Browser
     Browser->>Browser: js読み込み完了
 
-    Browser->>Server: GET /todo application/json
+    Browser->>Server: GET /todo <br />Accept: application/json
     activate Server
     Server->>Browser: ["歯ブラシ", "局留め受け取り"]
     deactivate Server
@@ -19,7 +19,7 @@ sequenceDiagram
 
     activate Browser
     Browser->>Browser: TODOリスト更新
-    Browser->>Server: POST /todo application/json <br /> new-item=パンを買う&done=歯ブラシ
+    Browser->>Server: POST /todo <br />Accept: application/json <br /> new-item=パンを買う&done=歯ブラシ
 
     activate Server
     Server->>Browser: ["パンを買う", "局留め受け取り"]

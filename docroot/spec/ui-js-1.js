@@ -45,6 +45,10 @@
         'ui-js-1/render-html-js-flow-1.mermaid',
         'render-html-js-flow-1',
       ],
+      [
+        'ui-js-1/render-html-js-flow-2.mermaid',
+        'render-html-js-flow-2',
+      ],
     ]
     for (const diagramTarget of diagramTargets) {
      

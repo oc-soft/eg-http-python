@@ -40,7 +40,13 @@ TODOリストは、リクエスト送信を行うとページ全体が再描画�
 
 ### フロー図
 
+#### ブラウザ処理
+
 <div id="render-html-js-flow-1">
+</div>
+
+#### サーバ処理
+<div id="render-html-js-flow-2">
 </div>
 
 
