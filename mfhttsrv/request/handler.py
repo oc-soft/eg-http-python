@@ -387,7 +387,7 @@ class Handler(server.SimpleHTTPRequestHandler):
         # htmlデータ本文
         # byteデータとして書き込み
         self.wfile.write(content)
-
+        return True
  
     def handle_post(self):
         """ 独自のPOST処理 """ 
