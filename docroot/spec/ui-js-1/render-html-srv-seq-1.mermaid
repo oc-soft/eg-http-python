@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant Browser 
+    participant Server
+
+    Browser->>Server: POST /todo  new-item=パンを買う&done=歯ブラシ
+    activate Server
+    Server->>Browser: <html><br /><form action="todo"><br /><input type="text" /><br /><button>TODOリスト更新</button><br />...<br /></form><br /></html>
+
+    deactivate Server
+

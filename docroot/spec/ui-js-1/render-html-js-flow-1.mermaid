@@ -1,0 +1,15 @@
+
+flowchart TD
+
+  start0000@{shape: circle, label: "開始"}
+  end9999@{shape: stadium, label: "終了"}
+
+  proc1000@{shape: rect, label: "todo更新リクエスト送信"}
+  proc2000@{shape: rect, label: "受信リストでTODOリストを作成"}
+  dec1000@{shape: diamond, label: "受信成功?" }
+
+  start0000 --> proc1000
+  proc1000 --> dec1000
+  dec1000 -- Yes --> proc2000
+  dec1000 -- No --> end9999
+  proc2000 --> end9999

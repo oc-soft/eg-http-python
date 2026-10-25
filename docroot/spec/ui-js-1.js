@@ -33,6 +33,18 @@
         'ui-js-1/post-todo-2.mermaid',
         'post-todo-2',
       ],
+      [
+        'ui-js-1/render-html-srv-flow-1.mermaid',
+        'render-html-srv-flow-1',
+      ],
+      [
+        'ui-js-1/render-html-js-seq-1.mermaid',
+        'render-html-js-seq-1',
+      ],
+      [
+        'ui-js-1/render-html-js-flow-1.mermaid',
+        'render-html-js-flow-1',
+      ],
     ]
     for (const diagramTarget of diagramTargets) {
      

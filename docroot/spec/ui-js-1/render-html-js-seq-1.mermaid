@@ -1,0 +1,29 @@
+
+sequenceDiagram
+    participant Browser 
+    participant Server
+    activate Browser
+    Browser->>Browser: js読み込み完了
+
+    Browser->>Server: GET /todo application/json
+    activate Server
+    Server->>Browser: ["歯ブラシ", "局留め受け取り"]
+    deactivate Server
+
+    Browser->>Browser: htmlページデータ作成
+    deactivate Browser
+    
+
+    Browser->>Browser: 入力待ち
+
+
+    activate Browser
+    Browser->>Browser: TODOリスト更新
+    Browser->>Server: POST /todo application/json <br /> new-item=パンを買う&done=歯ブラシ
+
+    activate Server
+    Server->>Browser: ["パンを買う", "局留め受け取り"]
+    deactivate Server
+
+    Browser->>Browser: htmlページデータ更新
+    deactivate Browser

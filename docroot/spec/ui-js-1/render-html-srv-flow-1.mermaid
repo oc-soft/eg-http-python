@@ -1,0 +1,17 @@
+flowchart TD
+
+  start0000@{shape: circle, label: "開始"} 
+  end9999@{shape: stadium, label: "終了"}
+  
+  proc1000@{shape: rect, label: "postデータ解析"}
+  proc2000@{shape: rect, label: "todoリスト読み込み"}
+  proc3000@{shape: rect, label: "todoリストhtmlテンプレート読み込み"}
+  proc4000@{shape: rect, label: "テンプレートとtodoリストからhtmlページ作成"}
+  proc5000@{shape: rect, label: "htmlページをブラウザに返却"}
+
+  start0000 --> proc1000
+  proc1000 --> proc2000
+  proc2000 --> proc3000
+  proc3000 --> proc4000
+  proc4000 --> proc5000
+  proc5000 --> end9999
