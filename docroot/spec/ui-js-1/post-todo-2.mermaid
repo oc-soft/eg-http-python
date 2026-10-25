@@ -1,0 +1,6 @@
+sequenceDiagram
+    participant Browser 
+    participant Server
+    Browser->>Server: POST /todo  new-item=パンを買う&done=歯ブラシ
+    Server->>Browser: ["パンを買う","歯ブラシ"]
+
