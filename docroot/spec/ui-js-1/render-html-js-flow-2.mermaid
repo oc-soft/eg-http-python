@@ -3,12 +3,21 @@ flowchart TD
   start0000@{shape: circle, label: "開始"}
   end9999@{shape: stadium, label: "終了"}
 
+  proc0100@{shape: rect, label: "postデータ解析"}
+  proc0150@{shape: rect, label: "todoリスト更新"}
+  proc0200@{shape: rect, label: "todoリスト読み込み"}
+ 
   dec1000@{shape: diamond, label: "Acceptはapplication/json?"}
-  proc1000@{shape: rect, label: "jsonによる応答"}
-  proc2000@{shape: rect, label: "htmlによる応答"}
 
-  start0000 --> dec1000
+  proc1000@{shape: rect, label: "jsonデータをブラウザに返却"}
+
+  proc3000@{shape: rect, label: "todoリストhtmlテンプレート読み込み"}
+  proc4000@{shape: rect, label: "テンプレートとtodoリストからhtmlページ作成"}
+  proc5000@{shape: rect, label: "htmlページをブラウザに返却"}
+
+  start0000 --> proc0100 --> proc0150 --> proc0200 --> dec1000
   dec1000 -- Yes --> proc1000
-  dec1000 -- No --> proc2000
+  dec1000 -- No --> proc3000
   proc1000 --> end9999
-  proc2000 --> end9999
+  proc3000 --> proc4000 --> proc5000
+  proc5000 --> end9999
